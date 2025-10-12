@@ -1,5 +1,6 @@
 package com.mountblue.blog.blog_application.service;
 
+import com.mountblue.blog.blog_application.model.Tag;
 import com.mountblue.blog.blog_application.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public List<String> fetchTags(){
-        return tagRepository.findDistinctTagNames();
+    public List<Tag> fetchTags(){
+        return tagRepository.findAll();
     }
 }

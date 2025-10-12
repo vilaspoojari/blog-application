@@ -4,200 +4,159 @@
     <meta charset="UTF-8">
     <title>My Blog Application</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .search-bar input[type="text"] {
-            padding: 5px;
-            width: 200px;
-        }
-        .filters {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
-        .filter-section {
-            border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 6px;
-            width: 300px;
-        }
-        .filter-options {
-            height: 100px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            padding: 5px;
-            margin-top: 5px;
-        }
-        .blog-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .blog-card {
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 5px;
-        }
-        .blog-card h2 {
-            margin: 0 0 5px 0;
-        }
-        .blog-meta {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .pagination {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        .pagination a, .pagination strong {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .pagination strong {
-            background-color: #007bff;
-            color: white;
-        }
+        body { font-family: "Helvetica Neue", Arial, sans-serif; margin: 30px auto; max-width: 1100px; background: #fff; color: #000; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { font-size: 1.8em; margin: 0; }
+        a { text-decoration: none; color: #000; }
+        a:hover { text-decoration: underline; }
+        .search-bar input[type="text"] { padding: 6px; border: 1px solid #000; width: 220px; }
+        .search-bar button { padding: 6px 10px; border: 1px solid #000; background: #fff; cursor: pointer; }
+        .search-bar button:hover { background: #000; color: #fff; }
+        .new-post { display: inline-block; margin-bottom: 15px; padding: 6px 12px; border: 1px solid #000; background: #fff; font-weight: bold; }
+        .new-post:hover { background: #000; color: #fff; }
+        .main-container { display: grid; grid-template-columns: 3fr 1fr; gap: 20px; align-items: start; }
+        .blog-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .blog-card { display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #000; padding: 15px; border-radius: 4px; background: #fff; height: 100%; box-sizing: border-box; }
+        .blog-card h2 { margin-top: 0; }
+        .blog-meta { font-size: 0.9em; color: #333; margin-bottom: 10px; }
+        .blog-card p { flex-grow: 1; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; white-space: normal; margin-bottom: 10px; }
+        .blog-card a { margin-top: 10px; border-top: 1px solid #000; padding-top: 5px; align-self: flex-start; }
+        .filters { position: sticky; top: 20px; }
+        .filter-section { border: 1px solid #000; padding: 15px; border-radius: 4px; background: #fff; }
+        .filter-section label, .filter-section p { font-weight: bold; }
+        .filter-options { border: 1px solid #000; padding: 5px; height: 100px; overflow-y: auto; margin-top: 5px; }
+        select, input[type="date"] { width: 100%; border: 1px solid #000; padding: 5px; background: #fff; }
+        button { border: 1px solid #000; padding: 6px 10px; background: #fff; cursor: pointer; }
+        button:hover { background: #000; color: #fff; }
+        .pagination { margin-top: 30px; display: flex; justify-content: center; gap: 8px; grid-column: 1 / -1; }
+        .pagination a, .pagination strong { border: 1px solid #000; padding: 5px 10px; }
+        .pagination strong { background: #000; color: #fff; }
+        @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } .filters { position: relative; } }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>My Blog Application</h1>
+    <h1>My Blog</h1>
     <div class="search-bar">
         <form th:action="@{/}" method="get">
-            <input type="text" name="search" placeholder="Search..." th:value="${search}">
+            <input type="text" name="search" placeholder="Search..." th:value="${filterDto.search}">
+            <input type="hidden" name="start" th:value="0">
+            <input type="hidden" name="limit" th:value="${filterDto.limit}">
+            <input type="hidden" name="sortField" th:value="${filterDto.sortField}">
+            <input type="hidden" name="order" th:value="${filterDto.order}">
             <button type="submit">Search</button>
         </form>
-
     </div>
     <a href="/login">Login</a>
 </header>
-<a th:href="@{/newpost}"
-   style="margin-left: 10px; padding: 5px 10px; background-color: #28a745; color: white; border-radius: 4px; text-decoration: none;">
-    New Post
-</a>
-<!-- Filters Section -->
-<div class="filters">
-    <form th:action="@{/}" method="get" class="filter-section">
-        <input type="hidden" name="search" th:value="${search}">
 
-        <!-- Filter type dropdown -->
-        <label for="filterName"><strong>Filter By:</strong></label>
-        <select id="filterName" name="filterName" onchange="this.form.submit()">
-            <option value="">Select Filter</option>
-            <option th:each="filter : ${filters}"
-                    th:value="${filter}"
-                    th:text="${filter}"
-                    th:selected="${filter} == ${filterName}">
-            </option>
-        </select>
+<a class="new-post" th:href="@{/newpost}">New Post</a>
 
-        <!-- Author multi-select -->
-        <div th:if="${filterName} == 'author'">
-            <p><strong>Select Authors:</strong></p>
+<div class="main-container">
+
+    <!-- Blog List -->
+    <div class="blog-list">
+        <div class="blog-card" th:each="post : ${posts}">
+            <h2 th:text="${post.title}">Title</h2>
+            <div class="blog-meta"
+                 th:text="${post.authorName + ', ' + #temporals.format(post.publishedAt, 'dd/MM/yyyy')}"></div>
+            <p th:text="${post.excerpt}">Excerpt...</p>
+            <a th:href="@{/postId/{id}(id=${post.id})}">Read more</a>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <form th:action="@{/}" method="get" class="filter-section">
+            <input type="hidden" name="start" th:value="0">
+            <input type="hidden" name="limit" th:value="${filterDto.limit}">
+            <input type="hidden" name="search" th:value="${filterDto.search}">
+
+            <p>Authors:</p>
             <div class="filter-options">
                 <div th:each="author : ${authors}">
                     <label>
-                        <input type="checkbox" name="authorName"
-                               th:value="${author}"
-                               th:checked="${authorName != null} ? ${authorName.contains(author)} : false">
-                        <span th:text="${author}"></span>
+                        <input type="checkbox" name="authorIds"
+                               th:value="${author.id}"
+                               th:checked="${filterDto.authorIds != null} ? ${filterDto.authorIds.contains(author.id)} : false">
+                        <span th:text="${author.name}"></span>
                     </label><br/>
                 </div>
             </div>
-        </div>
 
-        <!-- Published date range -->
-        <div th:if="${filterName} == 'published'">
-            <p><strong>Select Date Range:</strong></p>
-            <label>
-                From:
-                <input type="date" name="startDate"
-                       th:value="${startDate != null} ? ${#dates.format(startDate, 'yyyy-MM-dd')} : ''">
-            </label><br/>
-            <label>
-                To:
-                <input type="date" name="endDate"
-                       th:value="${endDate != null} ? ${#dates.format(endDate, 'yyyy-MM-dd')} : ''">
-            </label>
-        </div>
-
-        <!-- Tags multi-select -->
-        <div th:if="${filterName} == 'tags'">
-            <p><strong>Select Tags:</strong></p>
+            <p>Tags:</p>
             <div class="filter-options">
                 <div th:each="tag : ${tags}">
                     <label>
-                        <input type="checkbox" name="tagName"
-                               th:value="${tag}"
-                               th:checked="${selectedTags != null} ? ${selectedTags.contains(tag)} : false">
-                        <span th:text="${tag}"></span>
+                        <input type="checkbox" name="tagIds"
+                               th:value="${tag.id}"
+                               th:checked="${filterDto.tagIds != null} ? ${filterDto.tagIds.contains(tag.id)} : false">
+                        <span th:text="${tag.name}"></span>
                     </label><br/>
                 </div>
             </div>
-        </div>
 
-        <!-- Sort and order -->
-        <div style="margin-top:10px;">
-            <label><strong>Sort by:</strong></label>
-            <select name="sortField">
-                <option value="publishedAt" th:selected="${sortField} == 'publishedAt'">Published Date</option>
-                <option value="title" th:selected="${sortField} == 'title'">Title</option>
-            </select>
-            <select name="order">
-                <option value="asc" th:selected="${order} == 'asc'">Ascending</option>
-                <option value="desc" th:selected="${order} == 'desc'">Descending</option>
-            </select>
-        </div>
+            <!-- 🗓️ Date Filter -->
+            <p>Date Range:</p>
+            <label>From:</label>
+            <input type="date" name="startDate"
+                   th:value="${filterDto.startDate != null ? #temporals.format(filterDto.startDate, 'yyyy-MM-dd') : ''}">
+            <label>To:</label>
+            <input type="date" name="endDate"
+                   th:value="${filterDto.endDate != null ? #temporals.format(filterDto.endDate, 'yyyy-MM-dd') : ''}">
+            <div style="margin-top:10px;">
+                <label>Sort by:</label>
+                <select name="sortField">
+                    <option value="publishedAt" th:selected="${filterDto.sortField == 'publishedAt'}">Published Date</option>
+                    <option value="title" th:selected="${filterDto.sortField == 'title'}">Title</option>
+                </select>
+                <select name="order">
+                    <option value="asc" th:selected="${filterDto.order == 'asc'}">Ascending</option>
+                    <option value="desc" th:selected="${filterDto.order == 'desc'}">Descending</option>
+                </select>
+            </div>
 
-        <div style="margin-top:10px;">
-            <button type="submit">Apply</button>
-        </div>
-
-    </form>
-</div>
-
-<!-- Blog List -->
-<div class="blog-list">
-    <div class="blog-card" th:each="post : ${posts}">
-        <h2 th:text="${post.title}">Title</h2>
-        <div class="blog-meta"
-             th:text="${post.authorName + ', ' + #temporals.format(post.publishedAt, 'dd/MM/yyyy')}">
-        </div>
-        <p th:text="${post.excerpt}">Post excerpt goes here...</p>
-        <a th:href="@{/postId/{id}(id=${post.id})}">Read more</a>
+            <div style="margin-top:10px;">
+                <button type="submit">Apply Filters</button>
+                <a href="/" style="border: 1px solid #000; padding: 6px 10px; text-decoration: none;
+                               background: #fff; color: #000; cursor: pointer; border-radius: 4px;"
+                   onmouseover="this.style.background='#000'; this.style.color='#fff';"
+                   onmouseout="this.style.background='#fff'; this.style.color='#000';">
+                    Clear Filters
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
 <!-- Pagination -->
 <div class="pagination">
-    <a th:if="${page > 1}"
-       th:href="@{/(page=${page - 1}, limit=${limit}, filterName=${filterName}, authorName=${authorName}, startDate=${startDate}, endDate=${endDate}, tagName=${selectedTags})}">&laquo; Prev</a>
 
-    <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-        <a th:if="${i != page}"
-           th:href="@{/(page=${i}, limit=${limit}, filterName=${filterName}, authorName=${authorName}, startDate=${startDate}, endDate=${endDate}, tagName=${selectedTags})}"
-           th:text="${i}"></a>
-        <strong th:if="${i == page}" th:text="${i}"></strong>
-    </span>
+    <!-- Previous button -->
+    <a th:if="${filterDto.start > 0}"
+       th:href="@{/(start=${filterDto.start - filterDto.limit < 0 ? 0 : filterDto.start - filterDto.limit},
+                  limit=${filterDto.limit},
+                  authorIds=${filterDto.authorIds},
+                  tagIds=${filterDto.tagIds},
+                  search=${filterDto.search},
+                  startDate=${filterDto.startDate},
+                  endDate=${filterDto.endDate},
+                  sortField=${filterDto.sortField},
+                  order=${filterDto.order})}">&laquo; Prev</a>
 
-    <a th:if="${page < totalPages}"
-       th:href="@{/(page=${page + 1}, limit=${limit}, filterName=${filterName}, authorName=${authorName}, startDate=${startDate}, endDate=${endDate}, tagName=${selectedTags})}">Next &raquo;</a>
+    <!-- Next button -->
+    <a th:if="${filterDto.start + filterDto.limit < totalCount}"
+       th:href="@{/(start=${filterDto.start + filterDto.limit},
+                  limit=${filterDto.limit},
+                  authorIds=${filterDto.authorIds},
+                  tagIds=${filterDto.tagIds},
+                  search=${filterDto.search},
+                  startDate=${filterDto.startDate},
+                  endDate=${filterDto.endDate},
+                  sortField=${filterDto.sortField},
+                  order=${filterDto.order})}">Next &raquo;</a>
+
 </div>
 
 </body>

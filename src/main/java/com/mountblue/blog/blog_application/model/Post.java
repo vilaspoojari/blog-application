@@ -26,8 +26,9 @@ public class Post {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     @Column(name = "published_at")
     private LocalDateTime publishedAt;
@@ -39,6 +40,7 @@ public class Post {
     private Set<PostTag> postTags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("createdAt ASC")
     private Set<Comment> comments;
 
     @Column(name = "created_at", nullable = false, updatable = false)

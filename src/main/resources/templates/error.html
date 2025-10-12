@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${errorTitle} ?: 'Error'">Error</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #fff;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 30px;
+        }
+
+        button, a {
+            border: 1px solid #000;
+            padding: 8px 15px;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        button:hover, a:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            button, a {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2 th:text="${errorTitle} ?: 'Unexpected Error'">Unexpected Error</h2>
+<p th:text="${errorMessage} ?: 'An unexpected error occurred.'">An unexpected error occurred.</p>
+<a href="/">Go Back to Home</a>
+
+</body>
+</html>

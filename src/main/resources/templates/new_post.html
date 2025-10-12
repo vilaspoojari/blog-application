@@ -3,27 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <title>Create New Post</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            margin: 30px auto;
+            max-width: 700px;
+            background: #fff;
+            color: #000;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border: 1px solid #000;
+            padding: 25px;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #000;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: 1px solid #000;
+            background: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            width: 150px;
+            align-self: flex-start;
+        }
+
+        button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #000;
+            border: 1px solid #000;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        a:hover {
+            background: #000;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
+
 <h1>Create New Post</h1>
 
 <form th:action="@{/newpost}" method="post">
-    <label>Title:</label><br/>
-    <input type="text" name="title" required/><br/><br/>
+    <div>
+        <label>Title:</label>
+        <input type="text" name="title" required/>
+    </div>
 
-    <label>Tags:</label><br/>
-    <textarea name="tags" rows="3" required></textarea><br/><br/>
+    <div>
+        <label>Tags (comma separated):</label>
+        <textarea name="tags" rows="2" required></textarea>
+    </div>
 
-    <label>Content:</label><br/>
-    <textarea name="content" rows="8" required></textarea><br/><br/>
+    <div>
+        <label>Content:</label>
+        <textarea name="content" rows="8" required></textarea>
+    </div>
 
-    <label>Author:</label><br/>
-    <input type="text" name="author" required/><br/><br/>
-
+<!--    <div>-->
+<!--        <label>Author:</label>-->
+<!--        <input type="text" name="author" required/>-->
+<!--    </div>-->
 
     <button type="submit">Submit</button>
 </form>
 
 <a href="/">Back to Dashboard</a>
+
 </body>
 </html>

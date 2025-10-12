@@ -19,7 +19,7 @@ public class Comment {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(columnDefinition = "TEXT", nullable = false)
