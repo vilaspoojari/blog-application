@@ -13,10 +13,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
-    CommentRepository commentRepository;
-    PostRepository postRepository;
-    UserRepository userRepository;
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository){
+
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+
+    public CommentService(CommentRepository commentRepository,
+                          PostRepository postRepository,
+                          UserRepository userRepository){
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
@@ -25,12 +29,13 @@ public class CommentService {
         try {
             Post post = postRepository.getReferenceById(commentDto.getId());
             User user = userRepository.findByName("Alice");
+
             Comment comment = new Comment();
             comment.setName(user.getName());
-            int i=1/0;
             comment.setEmail(user.getEmail());
             comment.setComment(commentDto.getComment());
             comment.setPost(post);
+
             commentRepository.save(comment);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add comment. Please try again later. Error: " + e.getMessage());
@@ -49,16 +54,21 @@ public class CommentService {
     }
 
     public Comment fetchCommentById(Long commentId) {
-        return commentRepository.findById(commentId).orElseThrow(()-> new NoDataFound("Comment Not Found with id " + commentId));
+        return commentRepository.findById(commentId).orElseThrow(
+                ()-> new NoDataFound("Comment Not Found with id " + commentId)
+        );
     }
 
 
     public Long updateComment(CommentDto commentDto) {
         try {
-            Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(() -> new NoDataFound("Comment Not Found with id " + commentDto.getId()));
+            Comment comment = commentRepository.findById(commentDto.getId()).orElseThrow(
+                    () -> new NoDataFound("Comment Not Found with id " + commentDto.getId())
+            );
             Long postId = comment.getPost().getId();
             comment.setComment(commentDto.getComment());
             commentRepository.save(comment);
+
             return postId;
         } catch (Exception e) {
             throw new RuntimeException("Failed to update comment. Please try again later. Error: " + e.getMessage());

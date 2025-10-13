@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class PostFilterDto {
+
     private int start = 0;
     private int limit = 10;
     private List<Long> authorIds;

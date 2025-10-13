@@ -19,35 +19,6 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("""
-            SELECT DISTINCT new com.mountblue.blog.blog_application.dto.PostPreviewDto(
-                p.id, p.title, p.excerpt, u.name, p.publishedAt
-            )
-            FROM Post p
-            JOIN p.postTags pt
-            JOIN pt.tag t
-            JOIN p.author u
-            WHERE
-                (:authors IS NULL OR p.author.id IN :authors)
-                AND (:tags IS NULL OR t.id IN :tags)
-                AND 
-                (
-                    :search IS NULL OR 
-                    p.title ILIKE %:search% OR
-                    p.content ILIKE %:search% OR
-                    u.name ILIKE %:search% OR
-                    t.name ILIKE %:search%
-                )
-            """)
-    Page<PostPreviewDto> findPostList(
-            @Param("authors") List<Long> authors,
-            @Param("tags") List<Long> tags,
-            @Param("start") LocalDate start,
-            @Param("end") LocalDate end,
-            @Param("search") String search,
-            Pageable pageable
-    );
-
-    @Query("""
         SELECT DISTINCT new com.mountblue.blog.blog_application.dto.PostPreviewDto(
             p.id, p.title, p.excerpt, u.name, p.publishedAt
         )

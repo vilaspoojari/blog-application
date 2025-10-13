@@ -9,7 +9,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleAllExceptions(Exception ex, Model model) {
-
         model.addAttribute("errorTitle", "Unexpected Error");
         model.addAttribute("errorMessage", ex.getMessage() != null ? ex.getMessage() : "An error occurred.");
         return "error";

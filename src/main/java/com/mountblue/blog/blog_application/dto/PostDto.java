@@ -8,9 +8,9 @@ import java.util.List;
 @Getter
 @Setter
 public class PostDto {
+
     private Long id;
     private String title;
     private String content;
-//    private String author;
     private List<String> tags;
 }
