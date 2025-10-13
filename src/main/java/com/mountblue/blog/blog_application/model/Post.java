@@ -36,10 +36,10 @@ public class Post {
     @Column(name = "is_published", nullable = false)
     private Boolean isPublished = true;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<PostTag> postTags;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @OrderBy("createdAt ASC")
     private Set<Comment> comments;
 

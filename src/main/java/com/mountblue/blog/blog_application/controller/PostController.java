@@ -36,12 +36,12 @@ public class PostController {
         return "index";
     }
 
-    @GetMapping("/newpost")
+    @GetMapping("/post")
     public String showPost() {
         return "new_post";
     }
 
-    @PostMapping("/newpost")
+    @PostMapping("/post/new")
     public String savePost(@ModelAttribute PostDto post) {
         postService.savePost(post);
         return "redirect:/";

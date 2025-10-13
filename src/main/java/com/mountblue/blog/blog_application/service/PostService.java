@@ -136,33 +136,42 @@ public class PostService {
     }
 
     public PostDto fetchPostResponse(Long postId) {
-        Post post = fetchPostById(postId);
+        try {
+            Post post = fetchPostById(postId);
 
-        PostDto postDto = new PostDto();
-        postDto.setId(postId);
-        postDto.setTitle(post.getTitle());
-        postDto.setContent(post.getContent());
+            PostDto postDto = new PostDto();
+            postDto.setId(postId);
+            postDto.setTitle(post.getTitle());
+            postDto.setContent(post.getContent());
 
-        List<String> tags = post.getPostTags()
-                .stream()
-                .map(postTag -> postTag.getTag().getName())
-                .toList();
+            List<String> tags = post.getPostTags()
+                    .stream()
+                    .map(postTag -> postTag.getTag().getName())
+                    .toList();
 
-        postDto.setTags(tags);
+            postDto.setTags(tags);
 
-        return postDto;
+            return postDto;
+
+        } catch (Exception e) {
+            throw new NoDataFound("Post Not Found with id " + postId);
+        }
     }
 
     public void deletePost(long postId) {
-        postRepository.deleteById(postId);
+        try {
+            postRepository.deleteById(postId);
 
-        List<Tag> unusedTags = tagRepository.findAll()
-                .stream()
-                .filter(tag -> tag.getPostTags().isEmpty())
-                .toList();
+            List<Tag> unusedTags = tagRepository.findAll()
+                    .stream()
+                    .filter(tag -> tag.getPostTags().isEmpty())
+                    .toList();
 
-        if (!unusedTags.isEmpty()) {
-            tagRepository.deleteAll(unusedTags);
+            if (!unusedTags.isEmpty()) {
+                tagRepository.deleteAll(unusedTags);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete post with id: " + postId);
         }
     }
 
@@ -199,8 +208,6 @@ public class PostService {
 
                 postTagRepository.save(postTag);
             }
-        } catch (NoDataFound e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to update post with id " + postDto.getId(), e);
         }

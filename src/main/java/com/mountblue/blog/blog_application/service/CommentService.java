@@ -25,6 +25,7 @@ public class CommentService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
     }
+
     public void addComment(CommentDto commentDto){
         try {
             Post post = postRepository.getReferenceById(commentDto.getId());

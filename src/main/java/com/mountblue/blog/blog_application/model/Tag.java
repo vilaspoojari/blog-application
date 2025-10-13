@@ -20,7 +20,7 @@ public class Tag {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
     private Set<PostTag> postTags;
 
     @Column(name = "created_at", nullable = false, updatable = false)
