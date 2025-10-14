@@ -17,6 +17,12 @@ public class CommentController {
         this.commentService = commentService;
     }
 
+    @GetMapping("/add/{postId}")
+    public String addComment(@PathVariable long postId,Model model){
+        model.addAttribute("postId",postId);
+        return "add_comment";
+    }
+
     @PostMapping("/add")
     public String addComment(@ModelAttribute CommentDto commentDto){
         commentService.addComment(commentDto);

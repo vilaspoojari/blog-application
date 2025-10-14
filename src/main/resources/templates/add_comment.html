@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Comment</title>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #fff;
+            color: #000;
+            margin: 40px auto;
+            max-width: 900px;
+            line-height: 1.8;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #000;
+            border: 1px solid #000;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        header a:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        h1, h4 {
+            text-align: center;
+        }
+
+        .add-comment {
+            margin-top: 40px;
+            border: 1px solid #000;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .add-comment input[type="text"],
+        .add-comment input[type="email"],
+        .add-comment textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #000;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        .add-comment button {
+            border: 1px solid #000;
+            padding: 8px 15px;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .add-comment button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 20px;
+            }
+            .add-comment button {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a th:href="@{/postId/{postId}(postId=${postId})}" class="back-button">Back</a>
+    <h5>My Blog Application</h5>
+    <a href="/login">Login</a>
+</header>
+
+<main>
+    <h1>Add a Comment</h1>
+    <div class="add-comment">
+        <form th:action="@{/comments/add}" method="post">
+            <input type="hidden" name="id" th:value="${postId}" />
+
+            <label for="name"><strong>Name:</strong></label><br/>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+
+            <label for="email"><strong>Email:</strong></label><br/>
+            <input type="email" id="email" name="email" placeholder="Your email" required>
+
+            <label for="comment"><strong>Comment:</strong></label><br/>
+            <textarea id="comment" name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+
+            <br/>
+            <button type="submit">Submit Comment</button>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

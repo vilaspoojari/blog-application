@@ -29,11 +29,10 @@ public class CommentService {
     public void addComment(CommentDto commentDto){
         try {
             Post post = postRepository.getReferenceById(commentDto.getId());
-            User user = userRepository.findByName("Alice");
 
             Comment comment = new Comment();
-            comment.setName(user.getName());
-            comment.setEmail(user.getEmail());
+            comment.setName(commentDto.getName());
+            comment.setEmail(commentDto.getEmail());
             comment.setComment(commentDto.getComment());
             comment.setPost(post);
 

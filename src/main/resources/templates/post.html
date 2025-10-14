@@ -241,6 +241,12 @@
 </article>
 
 <section class="comments">
+    <div style="text-align:center; margin-bottom:20px;">
+        <a th:href="@{/comments/add/{postId}(postId=${post.id})}"
+           style="border:1px solid #000; padding:8px 15px; border-radius:4px; text-decoration:none; color:#000; font-family:inherit; font-size:0.95rem;">
+            Add Comment
+        </a>
+    </div>
     <h3>Comments</h3>
 
     <!-- Existing Comments -->
@@ -266,17 +272,6 @@
 
     <div th:if="${post.comments == null or post.comments.isEmpty()}" style="color:#555;">
         <p>No comments yet. Be the first to comment!</p>
-    </div>
-
-    <!-- Add Comment Form -->
-    <div class="add-comment">
-        <h4>Add a Comment</h4>
-        <form th:action="@{/comments/add}" method="post">
-            <input type="hidden" name="id" th:value="${post.id}" />
-            <textarea name="comment" rows="4" placeholder="Write your comment here..." required></textarea>
-            <br/>
-            <button type="submit">Submit Comment</button>
-        </form>
     </div>
 </section>
 
