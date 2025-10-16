@@ -13,8 +13,10 @@ import com.mountblue.blog.blog_application.repository.PostRepository;
 import com.mountblue.blog.blog_application.repository.PostTagRepository;
 import com.mountblue.blog.blog_application.repository.TagRepository;
 import com.mountblue.blog.blog_application.repository.UserRepository;
+import com.mountblue.blog.blog_application.util.Utils;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.*;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,15 +29,17 @@ public class PostService {
     private final TagRepository tagRepository;
     private final PostTagRepository postTagRepository;
     private final UserRepository userRepository;
+    private final Utils utils;
 
     public PostService(PostRepository postRepository,
                        TagRepository tagRepository,
                        PostTagRepository postTagRepository,
-                       UserRepository userRepository) {
+                       UserRepository userRepository, Utils utils) {
         this.postRepository = postRepository;
         this.tagRepository = tagRepository;
         this.postTagRepository = postTagRepository;
         this.userRepository = userRepository;
+        this.utils = utils;
     }
 
     @Transactional
@@ -95,11 +99,11 @@ public class PostService {
     }
 
     @Transactional
-    public void savePost(PostDto postDto) {
+    public void savePost(PostDto postDto, String email, boolean isAdmin) {
         try {
             List<String> tagNames = postDto.getTags();
             String excerpt = postDto.getContent().substring(0, Math.min(postDto.getContent().length(), 100));
-            User user = userRepository.findByName("Alice");
+            User user = userRepository.findByEmail(email);
 
             Post post = new Post();
             post.setTitle(postDto.getTitle());
@@ -135,9 +139,13 @@ public class PostService {
                 .orElseThrow(() -> new NoDataFound("Post Not Found with id " + id));
     }
 
-    public PostDto fetchPostResponse(Long postId) {
+    public PostDto fetchPostResponse(Long postId, String userEmail, boolean isAdmin) {
         try {
             Post post = fetchPostById(postId);
+
+            if(!isAdmin && !utils.isAuthor(userEmail,post)){
+                throw new AccessDeniedException("You are not authorized to edit this post.");
+            }
 
             PostDto postDto = new PostDto();
             postDto.setId(postId);
@@ -153,15 +161,23 @@ public class PostService {
 
             return postDto;
 
-        } catch (Exception e) {
+        } catch (AccessDeniedException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new NoDataFound("Post Not Found with id " + postId);
         }
     }
 
-    public void deletePost(long postId) {
+    public void deletePost(long postId, String userEmail, boolean isAdmin) {
         try {
-            postRepository.deleteById(postId);
+            Post post = fetchPostById(postId);
 
+            if(!isAdmin && !utils.isAuthor(userEmail,post)){
+                throw new AccessDeniedException("You are not authorized to delete this post.");
+            }
+
+            postRepository.deleteById(postId);
             List<Tag> unusedTags = tagRepository.findAll()
                     .stream()
                     .filter(tag -> tag.getPostTags().isEmpty())
@@ -170,20 +186,27 @@ public class PostService {
             if (!unusedTags.isEmpty()) {
                 tagRepository.deleteAll(unusedTags);
             }
-        } catch (Exception e) {
+        } catch (AccessDeniedException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to delete post with id: " + postId);
         }
     }
 
     @Transactional
-    public void updatePost(PostDto postDto) {
+    public void updatePost(PostDto postDto, String email, boolean isAdmin) {
         try {
             List<String> tagNames = postDto.getTags();
             String excerpt = postDto.getContent().substring(0, Math.min(postDto.getContent().length(), 100));
-            User user = userRepository.findByName("Alice");
+            User user = userRepository.findByEmail(email);
 
             Post post = postRepository.findById(postDto.getId())
                     .orElseThrow(() -> new NoDataFound("Post Not Found with id " + postDto.getId()));
+
+            if(!utils.isAuthor(email,post) && !isAdmin){
+                throw new AccessDeniedException("You are not authorized to edit this post.");
+            }
 
             post.setTitle(postDto.getTitle());
             post.setContent(postDto.getContent());
@@ -208,7 +231,10 @@ public class PostService {
 
                 postTagRepository.save(postTag);
             }
-        } catch (Exception e) {
+        } catch (AccessDeniedException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to update post with id " + postDto.getId(), e);
         }
     }

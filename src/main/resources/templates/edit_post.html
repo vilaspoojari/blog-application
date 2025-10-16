@@ -102,7 +102,7 @@
 
     <!-- Post Tags -->
     <div>
-        <label for="tags">Tags (comma separated)</label>
+        <label for="tags">Tags: </label>
         <input type="text" id="tags"
                th:field="*{tags}"
                th:value="${#strings.listJoin(postDto.tags, ', ')}"

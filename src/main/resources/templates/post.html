@@ -204,12 +204,12 @@
 <header>
     <a href="/" class="back-button">Back</a>
     <h5>My Blog Application</h5>
-    <a href="/login">Login</a>
+<!--    <a href="/login">Login</a>-->
 </header>
 
 <article>
     <!-- Edit/Delete buttons -->
-    <div class="post-actions">
+    <div th:if="${isAuthor}" class="post-actions">
         <a th:href="@{/post/edit/{id}(id=${post.id})}">Edit</a>
 
         <form th:action="@{/post/{id}(id=${post.id})}" th:method="delete" style="display:inline;">
@@ -242,7 +242,7 @@
 
 <section class="comments">
     <div style="text-align:center; margin-bottom:20px;">
-        <a th:href="@{/comments/add/{postId}(postId=${post.id})}"
+        <a th:href="@{/comments/add/{post}(post=${post.id})}"
            style="border:1px solid #000; padding:8px 15px; border-radius:4px; text-decoration:none; color:#000; font-family:inherit; font-size:0.95rem;">
             Add Comment
         </a>
@@ -259,7 +259,7 @@
             <p th:text="${comment.comment}">Comment content...</p>
             <small th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}">Date</small>
 
-            <div class="comment-actions">
+            <div th:if="${isAuthor}" class="comment-actions">
                 <a th:href="@{/comments/edit/{id}(id=${comment.id})}">Edit</a>
 
                 <form th:action="@{/comments/delete/{id}(id=${comment.id})}" th:method="delete" style="display:inline;">

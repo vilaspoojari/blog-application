@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>My Blog Application</title>
@@ -48,7 +49,20 @@
             <button type="submit">Search</button>
         </form>
     </div>
-    <a href="/login">Login</a>
+    <p th:if="${user != null}">
+        Hello, <span th:text="${user.username}"></span>!
+    </p>
+    <p th:unless="${user != null}">
+        Hello, Guest!
+    </p>
+    <a th:if="${user == null }" href="/login">Login</a>
+
+    <form th:if="${user != null }" action="#" th:action="@{/logout}"
+          method="POST">
+
+        <input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+
+    </form>
 </header>
 
 <a class="new-post" th:href="@{/post}">New Post</a>
@@ -62,7 +76,7 @@
             <div class="blog-meta"
                  th:text="${post.authorName + ', ' + #temporals.format(post.publishedAt, 'dd/MM/yyyy')}"></div>
             <p th:text="${post.excerpt}">Excerpt...</p>
-            <a th:href="@{/postId/{id}(id=${post.id})}">Read more</a>
+            <a th:href="@{/post/{id}(id=${post.id})}">Read more</a>
         </div>
     </div>
 
@@ -97,7 +111,7 @@
                 </div>
             </div>
 
-            <!-- 🗓️ Date Filter -->
+            <!--  Date Filter -->
             <p>Date Range:</p>
             <label>From:</label>
             <input type="date" name="startDate"

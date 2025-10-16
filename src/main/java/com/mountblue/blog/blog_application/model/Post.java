@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,11 +38,11 @@ public class Post {
     private Boolean isPublished = true;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private Set<PostTag> postTags;
+    private List<PostTag> postTags;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @OrderBy("createdAt ASC")
-    private Set<Comment> comments;
+    private List<Comment> comments;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

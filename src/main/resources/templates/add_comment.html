@@ -91,9 +91,9 @@
 <body>
 
 <header>
-    <a th:href="@{/postId/{postId}(postId=${postId})}" class="back-button">Back</a>
+    <a th:href="@{/post/{post}(post=${post})}" class="back-button">Back</a>
     <h5>My Blog Application</h5>
-    <a href="/login">Login</a>
+<!--    <a href="/login">Login</a>-->
 </header>
 
 <main>
@@ -104,8 +104,7 @@
 
             <label for="name"><strong>Name:</strong></label><br/>
             <input type="text" id="name" name="name" placeholder="Your name" required>
-
-            <label for="email"><strong>Email:</strong></label><br/>
+             <label for="email"><strong>Email:</strong></label><br/>
             <input type="email" id="email" name="email" placeholder="Your email" required>
 
             <label for="comment"><strong>Comment:</strong></label><br/>

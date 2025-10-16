@@ -7,7 +7,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="\"user\"")
+//@Table(name="\"user\"")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -22,4 +23,7 @@ public class User {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String role = "ROLE_USER";
 }
