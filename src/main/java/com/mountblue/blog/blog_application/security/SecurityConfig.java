@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/post/new").hasAnyRole("USER","ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/post/**","/comments/delete/**").hasAnyRole("USER","ADMIN")
                 .requestMatchers(HttpMethod.PATCH,"/post/update","/comments/update").hasAnyRole("USER","ADMIN")
-//                    .requestMatchers(HttpMethod.GET, "/login", "/register").anonymous()
                 .requestMatchers(HttpMethod.GET, "/register","/post/**", "/comments/add/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/register","/comments/add").permitAll()
                 .anyRequest().authenticated()).formLogin(form->
@@ -53,7 +52,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/", true)
                         .permitAll())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/")
                         .permitAll()
         );
         return httpSecurity.build();
