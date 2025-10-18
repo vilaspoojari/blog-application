@@ -1,9 +1,6 @@
 package com.mountblue.blog.blog_application.service;
 
-import com.mountblue.blog.blog_application.dto.AuthorDto;
-import com.mountblue.blog.blog_application.dto.PostDto;
-import com.mountblue.blog.blog_application.dto.PostFilterDto;
-import com.mountblue.blog.blog_application.dto.PostPreviewDto;
+import com.mountblue.blog.blog_application.dto.*;
 import com.mountblue.blog.blog_application.exception.NoDataFound;
 import com.mountblue.blog.blog_application.model.Post;
 import com.mountblue.blog.blog_application.model.PostTag;
@@ -43,7 +40,7 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostPreviewDto> getPosts(PostFilterDto filter) {
+    public Page<PostPreviewDto> getPosts(PostFilterRequestDto filter) {
         try {
             int page = filter.getStart() / filter.getLimit();
 
@@ -99,7 +96,7 @@ public class PostService {
     }
 
     @Transactional
-    public void savePost(PostDto postDto, String email, boolean isAdmin) {
+    public Long createPost(PostDto postDto, String email, boolean isAdmin) {
         try {
             List<String> tagNames = postDto.getTags();
             String excerpt = postDto.getContent().substring(0, Math.min(postDto.getContent().length(), 100));
@@ -129,37 +126,35 @@ public class PostService {
 
                 postTagRepository.save(postTag);
             }
+            return post.getId();
         } catch (Exception e) {
             throw new RuntimeException("Failed to save post, Error: " + e.getMessage());
         }
     }
 
-    public Post fetchPostById(long id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new NoDataFound("Post Not Found with id " + id));
+    public Post fetchPostById(long postId) {
+        try {
+            return postRepository.findById(postId)
+                    .orElseThrow(() -> new NoDataFound("Post Not Found with id " + postId));
+
+        } catch (AccessDeniedException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new NoDataFound("Post Not Found with id " + postId);
+        }
     }
 
-    public PostDto fetchPostResponse(Long postId, String userEmail, boolean isAdmin) {
+    public Post fetchPostById(long postId, String userEmail, boolean isAdmin) {
         try {
-            Post post = fetchPostById(postId);
+            Post post = postRepository.findById(postId)
+                    .orElseThrow(() -> new NoDataFound("Post Not Found with id " + postId));
 
             if(!isAdmin && !utils.isAuthor(userEmail,post)){
                 throw new AccessDeniedException("You are not authorized to edit this post.");
             }
 
-            PostDto postDto = new PostDto();
-            postDto.setId(postId);
-            postDto.setTitle(post.getTitle());
-            postDto.setContent(post.getContent());
-
-            List<String> tags = post.getPostTags()
-                    .stream()
-                    .map(postTag -> postTag.getTag().getName())
-                    .toList();
-
-            postDto.setTags(tags);
-
-            return postDto;
+            return post;
 
         } catch (AccessDeniedException e) {
             throw e;
@@ -171,7 +166,7 @@ public class PostService {
 
     public void deletePost(long postId, String userEmail, boolean isAdmin) {
         try {
-            Post post = fetchPostById(postId);
+            Post post = postRepository.getReferenceById(postId);
 
             if(!isAdmin && !utils.isAuthor(userEmail,post)){
                 throw new AccessDeniedException("You are not authorized to delete this post.");
@@ -195,7 +190,7 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(PostDto postDto, String email, boolean isAdmin) {
+    public void updatePost(PostRequestDto postDto, String email, boolean isAdmin) {
         try {
             List<String> tagNames = postDto.getTags();
             String excerpt = postDto.getContent().substring(0, Math.min(postDto.getContent().length(), 100));

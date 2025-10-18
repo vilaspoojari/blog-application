@@ -1,5 +1,6 @@
 package com.mountblue.blog.blog_application.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class Tag {
     private String name;
 
     @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PostTag> postTags;
 
     @Column(name = "created_at", nullable = false, updatable = false)
