@@ -4,9 +4,6 @@ import com.mountblue.blog.blog_application.dto.RegisterDto;
 import com.mountblue.blog.blog_application.model.User;
 import com.mountblue.blog.blog_application.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +11,10 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, UserDetailsService userDetailsService){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
     }
 
     public void registerUser(RegisterDto registerDto){
