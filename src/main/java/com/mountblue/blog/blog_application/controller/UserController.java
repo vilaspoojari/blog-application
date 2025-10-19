@@ -23,7 +23,7 @@ public class UserController {
     public String getRegisterPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+        if (auth != null && !"anonymousUser".equals(auth.getPrincipal())) {
             return "redirect:/";
         }
 
@@ -40,7 +40,7 @@ public class UserController {
     public String getLoginPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+        if (auth != null && !"anonymousUser".equals(auth.getPrincipal())) {
             return "redirect:/";
         }
 
