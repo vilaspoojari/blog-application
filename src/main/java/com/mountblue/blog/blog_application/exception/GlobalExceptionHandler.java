@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.mountblue.blog.blog_application.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
