@@ -2,11 +2,7 @@ package com.mountblue.blog.blog_application.controller;
 
 import com.mountblue.blog.blog_application.dto.RegisterDto;
 import com.mountblue.blog.blog_application.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
