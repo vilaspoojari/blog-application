@@ -46,7 +46,7 @@ public class CommentService {
             Comment comment = commentRepository.getReferenceById(commentId);
             Post post = comment.getPost();
 
-            if(!isAdmin && utils.isAuthor(userEmail,post)){
+            if(!isAdmin && !utils.isAuthor(userEmail,post)){
                 throw new AccessDeniedException("You are not authorized to delete this comment.");
             }
 

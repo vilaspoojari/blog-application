@@ -1,7 +1,8 @@
 package com.mountblue.blog.blog_application.controller;
 
+import com.mountblue.blog.blog_application.dto.PostRequestDto;
 import com.mountblue.blog.blog_application.dto.PostDto;
-import com.mountblue.blog.blog_application.dto.PostFilterDto;
+import com.mountblue.blog.blog_application.dto.PostFilterRequestDto;
 import com.mountblue.blog.blog_application.dto.PostPreviewDto;
 import com.mountblue.blog.blog_application.model.Post;
 import com.mountblue.blog.blog_application.service.PostService;
@@ -30,7 +31,7 @@ public class PostController {
     }
 
     @GetMapping("/")
-    public String getPosts(PostFilterDto filterDto,
+    public String getPosts(PostFilterRequestDto filterDto,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -61,12 +62,12 @@ public class PostController {
         String userEmail = userDetails.getUsername();
         boolean isAdmin = utils.isRoleAdmin(userDetails);
 
-        postService.savePost(post, userEmail, isAdmin);
+        postService.createPost(post, userEmail, isAdmin);
         return "redirect:/";
     }
 
     @GetMapping("/post/{postId}")
-    public String showPost(@PathVariable int postId,
+    public String showPost(@PathVariable long postId,
                            Model model,
                            @AuthenticationPrincipal UserDetails userDetails) {
 
@@ -103,14 +104,14 @@ public class PostController {
         String userEmail = userDetails.getUsername();
         boolean isAdmin = utils.isRoleAdmin(userDetails);
 
-        PostDto postDto = postService.fetchPostResponse(postId, userEmail, isAdmin);
-        model.addAttribute("postDto", postDto);
+        Post post = postService.fetchPostById(postId, userEmail, isAdmin);
+        model.addAttribute("postDto", PostRequestDto.fromEntity(post));
 
         return "edit_post";
     }
 
     @PatchMapping("/post/update")
-    public String updatePost(@ModelAttribute PostDto postDto,
+    public String updatePost(@ModelAttribute PostRequestDto postDto,
                              @AuthenticationPrincipal UserDetails userDetails) {
 
         String userEmail = userDetails.getUsername();
