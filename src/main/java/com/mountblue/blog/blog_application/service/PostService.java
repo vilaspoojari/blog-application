@@ -112,6 +112,10 @@ public class PostService {
             post = postRepository.save(post);
 
             for (String tagName : tagNames) {
+                if(tagName.isEmpty()){
+                    continue;
+                }
+
                 Tag tag = tagRepository.findByName(tagName)
                         .orElseGet(() -> {
                             Tag newTag = new Tag();
@@ -212,6 +216,10 @@ public class PostService {
             post = postRepository.save(post);
 
             for (String tagName : tagNames) {
+                if(tagName.isEmpty()){
+                    continue;
+                }
+
                 Tag tag = tagRepository.findByName(tagName)
                         .orElseGet(() -> {
                             Tag newTag = new Tag();
