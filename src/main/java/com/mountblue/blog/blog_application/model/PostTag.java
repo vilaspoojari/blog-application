@@ -32,11 +32,6 @@ public class PostTag {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     @Getter
     @Setter
     @Embeddable
