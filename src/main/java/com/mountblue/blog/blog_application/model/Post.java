@@ -30,8 +30,8 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @Column(name = "published_at")
-    private LocalDateTime publishedAt;
+    @Column(name = "published_at", updatable = false)
+    private LocalDateTime publishedAt = LocalDateTime.now();
 
     @Column(name = "is_published", nullable = false)
     private Boolean isPublished = true;
