@@ -108,7 +108,6 @@ public class PostService {
             post.setAuthor(user);
             post.setExcerpt(excerpt);
             post.setIsPublished(true);
-            post.setPublishedAt(LocalDateTime.now());
             post = postRepository.save(post);
 
             for (String tagName : tagNames) {
@@ -212,7 +211,6 @@ public class PostService {
             post.setAuthor(user);
             post.setExcerpt(excerpt);
             post.setIsPublished(true);
-            post.setPublishedAt(LocalDateTime.now());
             post = postRepository.save(post);
 
             for (String tagName : tagNames) {
