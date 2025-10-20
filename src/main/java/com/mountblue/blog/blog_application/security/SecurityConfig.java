@@ -54,7 +54,6 @@ public class SecurityConfig {
                                         "/api/v2/comments/delete/**","/api/v2/post/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.PATCH, "/post/update", "/comments/update",
                                         "/api/v2/post/update", "/api/v2/comments/update").hasAnyRole("USER", "ADMIN")
-
                                 .anyRequest().authenticated())
 
                 .formLogin(form ->
